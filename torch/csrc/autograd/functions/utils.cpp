@@ -10,6 +10,8 @@
 
 #include "torch/csrc/autograd/variable.h"
 
+#include "torch/csrc/autograd/variable.h"
+
 #include <sstream>
 
 namespace torch { namespace autograd {
