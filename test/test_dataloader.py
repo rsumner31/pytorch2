@@ -15,6 +15,8 @@ from torch.utils.data.dataloader import default_collate, ExceptionWrapper
 from common import TestCase, run_tests, TEST_NUMPY, IS_WINDOWS
 from common_nn import TEST_CUDA
 
+JOIN_TIMEOUT = 14.0 if IS_WINDOWS else 1.5
+
 
 JOIN_TIMEOUT = 17.0 if IS_WINDOWS else 4.5
 
