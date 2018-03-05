@@ -333,6 +333,25 @@ class build_ext(build_ext_parent):
             # gets built
             ninja_global.run()
 
+        if IS_WINDOWS:
+            build_temp = self.build_temp
+            build_dir = 'torch/csrc'
+
+            ext_filename = self.get_ext_filename('_C')
+            lib_filename = '.'.join(ext_filename.split('.')[:-1]) + '.lib'
+
+            _C_LIB = os.path.join(build_temp, build_dir, lib_filename).replace('\\', '/')
+
+            THNN.extra_link_args += [_C_LIB]
+            if WITH_CUDA:
+                THCUNN.extra_link_args += [_C_LIB]
+            else:
+                # To generate .obj files for AutoGPU for the export class
+                # a header file cannot build, so it has to be copied to someplace as a source file
+                if os.path.exists("torch/csrc/generated/AutoGPU_cpu_win.cpp"):
+                    os.remove("torch/csrc/generated/AutoGPU_cpu_win.cpp")
+                shutil.copyfile("torch/csrc/cuda/AutoGPU.h", "torch/csrc/generated/AutoGPU_cpu_win.cpp")
+
         # It's an old-style class in Python 2.7...
         setuptools.command.build_ext.build_ext.run(self)
 
